@@ -1,13 +1,27 @@
 package com.addressbookapp.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.addressbookapp.model.Contact;
+import com.addressbookapp.service.AddressBookService;
 
 @RestController
+@RequestMapping("/contacts")
 public class AddressBookController {
 
-    @GetMapping("/addressbook")
-    public String welcomeMessage() {
-        return "Welcome to Address Book Application";
+    @Autowired
+    private AddressBookService addressBookService;
+
+    @PostMapping
+    public Contact addContact(@RequestBody Contact contact) {
+        return addressBookService.addContact(contact);
+    }
+
+    @GetMapping
+    public List<Contact> getAllContacts() {
+        return addressBookService.getAllContacts();
     }
 }
