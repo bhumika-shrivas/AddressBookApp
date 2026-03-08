@@ -1,0 +1,23 @@
+target/
+*.class
+*.log
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+
+# IntelliJ
+.idea
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
