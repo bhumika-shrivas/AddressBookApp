@@ -2,28 +2,32 @@
 
 A **Spring Boot REST API** application for managing contacts in an Address Book.
 
-This project follows a **Git Feature Branch Workflow**, where each **Use Case (UC)** is implemented in a separate branch and later merged into the `dev` branch.
+The project is implemented using a **Git Feature Branch Workflow**, where each use case is developed in a separate branch and merged into the `dev` branch.
 
 ---
 
-# 🚀 UC11 – Sort Contacts by Name
+# 🚀 UC12 – Sort Contacts by City, State, and Zip
 
-This branch introduces functionality to **sort contacts alphabetically by name**.
+This branch adds functionality to **sort contacts based on geographic attributes**.
 
-The sorting operation retrieves all contacts across all address books and returns them sorted by **first name**.
+Contacts can now be sorted by:
 
-The implementation uses **Java Streams API with Comparator sorting**.
+- City
+- State
+- Zip Code
+
+Sorting is implemented using the **Java Streams API with Comparator**.
 
 ---
 
 # 🛠 Tech Stack
 
-- ☕ Java 17  
-- 🌱 Spring Boot  
-- 📦 Maven  
-- 🔗 REST API  
-- 🐙 Git & GitHub  
-- ⚡ Java Streams API  
+- Java 17
+- Spring Boot
+- Maven
+- REST API
+- Git & GitHub
+- Java Streams API
 
 ---
 
@@ -32,57 +36,57 @@ The implementation uses **Java Streams API with Comparator sorting**.
 ```
 AddressBookApp
 │
-├── src/main/java/com/addressbookapp
+├── controller
+│      AddressBookController.java
 │
-│   ├── controller
-│   │      AddressBookController.java
-│   │
-│   ├── service
-│   │      AddressBookService.java
-│   │
-│   ├── model
-│   │      Contact.java
-│   │      AddressBook.java
-│   │
-│   └── AddressBookAppApplication.java
+├── service
+│      AddressBookService.java
 │
-├── src/main/resources
-│      application.properties
+├── model
+│      Contact.java
+│      AddressBook.java
 │
-└── pom.xml
+└── AddressBookAppApplication.java
 ```
 
 ---
 
-# 🧠 Implementation Logic
+# 🧠 Implementation
 
-All contacts across all address books are collected and sorted using Java Streams:
+Contacts from all address books are collected and sorted using:
 
 ```
-contacts.stream()
-        .sorted(Comparator.comparing(Contact::getFirstName))
+Comparator.comparing(Contact::getCity)
+Comparator.comparing(Contact::getState)
+Comparator.comparing(Contact::getZip)
 ```
 
-This sorts contacts alphabetically by **first name**.
+Sorting is performed using **Java Streams**.
 
 ---
 
-# 🌐 API Endpoint
+# 🌐 API Endpoints
 
-### 🔤 Sort Contacts by Name
-
-```
-GET /contacts/sort/name
-```
-
-Example Response
+### Sort Contacts by City
 
 ```
-[
- { "firstName":"Amit" },
- { "firstName":"Bhumi" },
- { "firstName":"Rahul" }
-]
+GET /contacts/sort/city
+```
+
+---
+
+### Sort Contacts by State
+
+```
+GET /contacts/sort/state
+```
+
+---
+
+### Sort Contacts by Zip
+
+```
+GET /contacts/sort/zip
 ```
 
 ---
@@ -90,7 +94,15 @@ Example Response
 # 🧪 Testing Using CURL
 
 ```
-curl http://localhost:8080/contacts/sort/name
+curl http://localhost:8080/contacts/sort/city
+```
+
+```
+curl http://localhost:8080/contacts/sort/state
+```
+
+```
+curl http://localhost:8080/contacts/sort/zip
 ```
 
 ---
@@ -98,10 +110,12 @@ curl http://localhost:8080/contacts/sort/name
 # 🌿 Git Branch
 
 ```
-feature/UC11-sort-contacts-by-name
+feature/UC12-sort-contacts-by-city-state-zip
 ```
 
-After review this branch will be merged into:
+This branch implements **Use Case 12 – Sorting Contacts by Location Fields**.
+
+After review it will be merged into:
 
 ```
 dev
@@ -111,13 +125,12 @@ dev
 
 # 📌 Next Implementation
 
-### UC12 – Sort Contacts by City, State, or Zip
+### UC13 – Read / Write Address Book Using File IO
 
-Next features:
+Next features include:
 
-- Sort contacts by **city**
-- Sort contacts by **state**
-- Sort contacts by **zip code**
-- Implement sorting using **Java Streams Comparator**
+- Writing address book contacts to file
+- Reading contacts from file
+- Using Java File IO
 
 ---
