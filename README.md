@@ -6,15 +6,18 @@ This project follows a **Git Feature Branch Workflow**, where each **Use Case (U
 
 ---
 
-# 🚀 UC3 – Edit Contact
+# 🚀 UC4 – Delete Contact
 
-This branch implements the ability to **retrieve and update contact details** in the Address Book.
+This branch implements the ability to **delete an existing contact from the Address Book**.
 
 The application now supports:
-- 🔍 Retrieving a contact using its **ID**
-- ✏️ Updating an existing contact
+- ➕ Adding contacts
+- 📋 Viewing all contacts
+- 🔍 Retrieving contact by ID
+- ✏️ Updating contact
+- ❌ Deleting contact by ID
 
-The contacts are stored in a **local in-memory list** and accessed through a **Service Layer**.
+Contacts are stored in a **local in-memory list** and managed through a **Service Layer**.
 
 ---
 
@@ -73,15 +76,15 @@ Client (CURL / Postman / Browser)
 
 **Controller**
 - Handles HTTP requests
-- Maps endpoints to methods
-- Calls service layer
+- Maps API endpoints to methods
+- Communicates with service layer
 
 **Service**
 - Contains business logic
-- Retrieves and updates contact data
+- Performs CRUD operations on contacts
 
 **Model**
-- Represents the Contact structure
+- Defines the Contact data structure
 
 ---
 
@@ -107,6 +110,16 @@ The `Contact` class represents a person in the Address Book.
 
 # 🌐 API Endpoints
 
+### ➕ Add Contact
+
+```
+POST /contacts
+```
+
+Adds a new contact.
+
+---
+
 ### 📋 Get All Contacts
 
 ```
@@ -123,7 +136,7 @@ Returns all contacts stored in memory.
 GET /contacts/{id}
 ```
 
-Returns the contact matching the provided ID.
+Returns contact matching the given ID.
 
 Example:
 
@@ -139,12 +152,28 @@ GET /contacts/1
 PUT /contacts/{id}
 ```
 
-Updates the contact information for the given ID.
+Updates contact information.
 
 Example:
 
 ```
 PUT /contacts/1
+```
+
+---
+
+### ❌ Delete Contact
+
+```
+DELETE /contacts/{id}
+```
+
+Deletes the contact with the specified ID.
+
+Example:
+
+```
+DELETE /contacts/1
 ```
 
 ---
@@ -175,6 +204,14 @@ curl -X PUT http://localhost:8080/contacts/1 -H "Content-Type: application/json"
 
 ---
 
+### Delete Contact
+
+```
+curl -X DELETE http://localhost:8080/contacts/1
+```
+
+---
+
 # ▶️ How to Run the Project
 
 ### 1️⃣ Clone the repository
@@ -185,7 +222,7 @@ git clone https://github.com/<your-username>/AddressBookApp.git
 
 ---
 
-### 2️⃣ Navigate to the project
+### 2️⃣ Navigate to project directory
 
 ```
 cd AddressBookApp
@@ -209,7 +246,7 @@ from your IDE.
 
 ---
 
-### 4️⃣ Access the APIs
+### 4️⃣ Access APIs
 
 ```
 http://localhost:8080/contacts
@@ -220,10 +257,10 @@ http://localhost:8080/contacts
 # 🌿 Git Branch
 
 ```
-feature/UC3-edit-contact
+feature/UC4-delete-contact
 ```
 
-This branch implements **Use Case 3 – Edit Contact**.
+This branch implements **Use Case 4 – Delete Contact**.
 
 After review it will be merged into:
 
@@ -235,11 +272,12 @@ dev
 
 # 📌 Next Implementation
 
-### UC4 – Delete Contact
+### UC5 – Add Multiple Contacts
 
-Next features to be implemented:
+Next features:
 
-- ❌ Delete contact using **DELETE API**
-- Remove contact by **ID**
+- ➕ Add multiple contacts
+- 📚 Manage multiple entries efficiently
+- Improve collection handling
 
 ---
