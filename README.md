@@ -2,17 +2,17 @@
 
 A **Spring Boot REST API** application for managing contacts in an Address Book.
 
-This project follows a **Git Feature Branch Workflow**, where each **Use Case (UC)** is implemented in a separate branch and later merged into the `dev` branch.
+The project follows a **Git Feature Branch Workflow**, where each **Use Case (UC)** is implemented in a separate branch and later merged into the `dev` branch.
 
 ---
 
-# 🚀 UC21 – Add Multiple Contacts Using Multithreading
+# 🚀 UC22 – Read Entries from JSON Server
 
-This branch introduces functionality to **add multiple contacts to the MySQL database simultaneously using Java multithreading**.
+This branch introduces functionality to **retrieve contact entries from a JSON Server**.
 
-Instead of inserting contacts one by one, the application creates a **separate thread for each contact insertion**, allowing multiple database operations to run concurrently.
+JSON Server is used as a **mock REST API** that simulates a backend database. The Spring Boot application communicates with this external API using **RestTemplate** and retrieves contact data.
 
-This improves performance when inserting large numbers of contacts.
+This demonstrates **integration with an external REST service**.
 
 ---
 
@@ -22,9 +22,8 @@ This improves performance when inserting large numbers of contacts.
 - 🌱 Spring Boot  
 - 📦 Maven  
 - 🔗 REST API  
-- 🐬 MySQL Database  
-- 🔌 JDBC  
-- 🧵 Java Multithreading  
+- 📡 JSON Server  
+- 🔌 RestTemplate  
 
 ---
 
@@ -37,10 +36,7 @@ AddressBookApp
 │      AddressBookController.java
 │
 ├── service
-│      AddressBookService.java
-│
-├── db
-│      AddressBookDBService.java
+│      JSONServerService.java
 │
 ├── model
 │      Contact.java
@@ -51,69 +47,107 @@ AddressBookApp
 
 ---
 
-# 🧠 Multithreading Implementation
+# 🌐 JSON Server Setup
 
-Each contact insertion runs in a separate thread.
+JSON Server provides a fake REST API for testing.
+
+### Install JSON Server
+
+```
+npm install -g json-server
+```
+
+---
+
+### Create JSON Data File
+
+Create a file named:
+
+```
+db.json
+```
+
+Example content:
+
+```
+{
+  "contacts": [
+    {
+      "id": 1,
+      "firstName": "Rahul",
+      "lastName": "Sharma",
+      "city": "Delhi"
+    },
+    {
+      "id": 2,
+      "firstName": "Bhumi",
+      "lastName": "Shrivas",
+      "city": "Bhopal"
+    }
+  ]
+}
+```
+
+---
+
+### Start JSON Server
+
+```
+json-server --watch db.json --port 3000
+```
+
+Server URL:
+
+```
+http://localhost:3000/contacts
+```
+
+---
+
+# 🧠 Implementation
+
+The application fetches contact data from JSON Server using **RestTemplate**.
 
 Example logic:
 
 ```
-contacts.forEach(contact -> {
-    new Thread(() -> {
-        addContact(contact);
-    }).start();
-});
+RestTemplate restTemplate = new RestTemplate();
+Contact[] contacts = restTemplate.getForObject(JSON_SERVER_URL, Contact[].class);
 ```
 
-This allows multiple contacts to be inserted into the database at the same time.
+The response is converted into a list of Contact objects.
 
 ---
 
 # 🌐 API Endpoint
 
-### Add Multiple Contacts to Database
+### Retrieve Contacts from JSON Server
 
 ```
-POST /contacts/db/add-multiple
+GET /contacts/jsonserver
 ```
 
-This endpoint accepts a list of contacts and inserts them into the database using multithreading.
-
----
-
-# 📥 Example Request Body
-
-```
-[
- {
-  "firstName":"Rahul",
-  "lastName":"Sharma",
-  "address":"Connaught Place",
-  "city":"Delhi",
-  "state":"Delhi",
-  "zip":"110001",
-  "phoneNumber":"8888888888",
-  "email":"rahul@email.com"
- },
- {
-  "firstName":"Amit",
-  "lastName":"Patel",
-  "address":"Satellite",
-  "city":"Ahmedabad",
-  "state":"Gujarat",
-  "zip":"380015",
-  "phoneNumber":"9998887777",
-  "email":"amit@email.com"
- }
-]
-```
+This endpoint retrieves all contacts from the external JSON Server.
 
 ---
 
 # 📤 Example Response
 
 ```
-Multiple contacts are being added using threads
+[
+ {
+  "id": 1,
+  "firstName": "Rahul",
+  "lastName": "Sharma",
+  "city": "Delhi"
+ },
+ {
+  "id": 2,
+  "firstName": "Bhumi",
+  "lastName": "Shrivas",
+  "city": "Bhopal"
+ }
+]
 ```
 
 ---
@@ -121,29 +155,15 @@ Multiple contacts are being added using threads
 # 🧪 Testing Using CURL
 
 ```
-curl -X POST http://localhost:8080/contacts/db/add-multiple \
--H "Content-Type: application/json" \
--d '[{"firstName":"Rahul","lastName":"Sharma","address":"Connaught","city":"Delhi","state":"Delhi","zip":"110001","phoneNumber":"8888888888","email":"rahul@email.com"},{"firstName":"Amit","lastName":"Patel","address":"Satellite","city":"Ahmedabad","state":"Gujarat","zip":"380015","phoneNumber":"9998887777","email":"amit@email.com"}]'
+curl http://localhost:8080/contacts/jsonserver
 ```
-
----
-
-# 🔍 Verify in Database
-
-Run the following query in MySQL:
-
-```
-SELECT * FROM contacts;
-```
-
-You should see multiple records inserted into the table.
 
 ---
 
 # 🌿 Git Branch
 
 ```
-feature/UC21-add-multiple-contacts-multithreading
+feature/UC22-read-entries-from-jsonserver
 ```
 
 After review this branch will be merged into:
@@ -156,12 +176,12 @@ dev
 
 # 📌 Next Implementation
 
-### UC22 – Read Entries From JSON Server
+### UC23 – Add Entries to JSON Server
 
 Next features:
 
-- Integrate application with **JSON Server**
-- Fetch contact entries from a mock REST API
-- Demonstrate external API communication
+- Send contact data to JSON Server
+- Use **POST request**
+- Demonstrate REST API integration with external services
 
 ---
