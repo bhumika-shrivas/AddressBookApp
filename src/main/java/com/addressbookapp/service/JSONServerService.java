@@ -21,4 +21,18 @@ public class JSONServerService {
 
         return Arrays.asList(contacts);
     }
+    
+    // Service to add multiple contacts to JSON Server
+    public String addMultipleContactsToJSONServer(List<Contact> contacts) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "http://localhost:3000/contacts";
+
+        contacts.forEach(contact -> {
+            restTemplate.postForObject(url, contact, Contact.class);
+        });
+
+        return "Contacts added to JSON Server successfully";
+    }
 }
