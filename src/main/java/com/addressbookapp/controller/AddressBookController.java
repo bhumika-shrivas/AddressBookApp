@@ -259,4 +259,14 @@ public class AddressBookController {
 
         return jsonService.addMultipleContactsToJSONServer(contacts);
     }
+    
+    // Update Contact in JSON Server
+    @PutMapping("/contacts/jsonserver/update/{id}")
+    public String updateContactInJSONServer(@PathVariable int id,
+                                            @RequestBody Contact contact) {
+
+        JSONServerService jsonService = new JSONServerService();
+
+        return jsonService.updateContactInJSONServer(id, contact);
+    }
 }

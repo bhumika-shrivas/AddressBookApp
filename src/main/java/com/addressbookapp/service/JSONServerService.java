@@ -35,4 +35,16 @@ public class JSONServerService {
 
         return "Contacts added to JSON Server successfully";
     }
+    
+    // Service to update a contact in JSON Server
+    public String updateContactInJSONServer(int id, Contact contact) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "http://localhost:3000/contacts/" + id;
+
+        restTemplate.put(url, contact);
+
+        return "Contact updated successfully in JSON Server";
+    }
 }
