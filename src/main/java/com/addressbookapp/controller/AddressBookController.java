@@ -229,4 +229,15 @@ public class AddressBookController {
 
         return dbService.addContact(contact);
     }
+    
+    // Add Multiple Contacts to Database using Threads
+    @PostMapping("/contacts/db/add-multiple")
+    public String addMultipleContacts(@RequestBody List<Contact> contacts) {
+
+        AddressBookDBService dbService = new AddressBookDBService();
+
+        dbService.addMultipleContacts(contacts);
+
+        return "Multiple contacts are being added using threads";
+    }
 }
