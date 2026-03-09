@@ -2,17 +2,17 @@
 
 A **Spring Boot REST API** application for managing contacts in an Address Book.
 
-The project follows a **Git Feature Branch Workflow**, where each **Use Case (UC)** is implemented in a separate branch and merged into the `dev` branch after completion.
+This project follows a **Git Feature Branch Workflow**, where each **Use Case (UC)** is implemented in a separate branch and later merged into the `dev` branch.
 
 ---
 
-# 🚀 UC19 – Count Contacts by City or State (Database)
+# 🚀 UC20 – Add Contact to Database
 
-This branch introduces functionality to **count the number of contacts grouped by city and state directly from the MySQL database**.
+This branch introduces functionality to **add new contacts directly into the MySQL database**.
 
-The feature uses **SQL aggregation with the `GROUP BY` clause** to calculate the number of contacts belonging to each city or state.
+Users can now create new contact entries through a REST API, which inserts the data into the database using **JDBC**.
 
-Instead of retrieving all contacts and counting them in memory, the counting is performed efficiently inside the database.
+This feature enables persistent storage of contact information in the database.
 
 ---
 
@@ -52,7 +52,13 @@ AddressBookApp
 
 # 🗄 Database Table
 
-Table used:
+Database used:
+
+```
+addressbook_db
+```
+
+Table:
 
 ```
 contacts
@@ -73,44 +79,44 @@ contacts
 
 ---
 
-# 🧠 SQL Queries Used
-
-### Count Contacts by City
+# 🧠 SQL Query Used
 
 ```
-SELECT city, COUNT(*) AS count
-FROM contacts
-GROUP BY city;
+INSERT INTO contacts
+(first_name,last_name,address,city,state,zip,phone,email,date_added)
+VALUES
+('Amit','Patel','Satellite','Ahmedabad','Gujarat','380015','9998887777','amit@email.com',CURDATE());
 ```
+
+The query inserts a new contact record into the database with the current date.
 
 ---
 
-### Count Contacts by State
+# 🌐 API Endpoint
+
+### Add Contact to Database
 
 ```
-SELECT state, COUNT(*) AS count
-FROM contacts
-GROUP BY state;
+POST /contacts/db/add
 ```
 
-These queries group records by city or state and return the total number of contacts for each group.
+This API inserts a new contact into the database.
 
 ---
 
-# 🌐 API Endpoints
-
-### Count Contacts by City
+# 📥 Example Request Body
 
 ```
-GET /contacts/db/count/city
-```
-
----
-
-### Count Contacts by State
-
-```
-GET /contacts/db/count/state
+{
+ "firstName":"Amit",
+ "lastName":"Patel",
+ "address":"Satellite",
+ "city":"Ahmedabad",
+ "state":"Gujarat",
+ "zip":"380015",
+ "phoneNumber":"9998887777",
+ "email":"amit@email.com"
+}
 ```
 
 ---
@@ -118,38 +124,43 @@ GET /contacts/db/count/state
 # 📤 Example Response
 
 ```
-{
- "Bhopal": 2,
- "Delhi": 1
-}
+Contact added successfully
 ```
-
-The response represents the number of contacts belonging to each city or state.
 
 ---
 
 # 🧪 Testing Using CURL
 
-### Count Contacts by City
-
 ```
-curl http://localhost:8080/contacts/db/count/city
+curl -X POST http://localhost:8080/contacts/db/add \
+-H "Content-Type: application/json" \
+-d '{"firstName":"Amit","lastName":"Patel","address":"Satellite","city":"Ahmedabad","state":"Gujarat","zip":"380015","phoneNumber":"9998887777","email":"amit@email.com"}'
 ```
 
 ---
 
-### Count Contacts by State
+# 🔍 Verify in Database
+
+Run the following query in MySQL:
 
 ```
-curl http://localhost:8080/contacts/db/count/state
+SELECT * FROM contacts;
 ```
+
+Example output:
+
+| id | first_name | city | date_added |
+|----|-----------|------|-----------|
+| 1 | Bhumi | Bhopal | 2026-03-09 |
+| 2 | Rahul | Delhi | 2026-03-09 |
+| 3 | Amit | Ahmedabad | 2026-03-09 |
 
 ---
 
 # 🌿 Git Branch
 
 ```
-feature/UC19-count-contacts-by-city-state-db
+feature/UC20-add-contact-to-database
 ```
 
 After review this branch will be merged into:
@@ -162,12 +173,13 @@ dev
 
 # 📌 Next Implementation
 
-### UC20 – Add Contact to Database
+### UC21 – Add Multiple Contacts Using Multithreading
 
 Next features:
 
-- Insert new contacts into the MySQL database
-- Use **JDBC PreparedStatement**
-- Sync database with application APIs
+- Insert multiple contacts simultaneously
+- Use **Java multithreading**
+- Improve performance when adding many contacts
+- Synchronize database operations safely
 
 ---
