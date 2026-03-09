@@ -6,13 +6,13 @@ This project follows a **Git Feature Branch Workflow**, where each **Use Case (U
 
 ---
 
-# 🚀 UC20 – Add Contact to Database
+# 🚀 UC21 – Add Multiple Contacts Using Multithreading
 
-This branch introduces functionality to **add new contacts directly into the MySQL database**.
+This branch introduces functionality to **add multiple contacts to the MySQL database simultaneously using Java multithreading**.
 
-Users can now create new contact entries through a REST API, which inserts the data into the database using **JDBC**.
+Instead of inserting contacts one by one, the application creates a **separate thread for each contact insertion**, allowing multiple database operations to run concurrently.
 
-This feature enables persistent storage of contact information in the database.
+This improves performance when inserting large numbers of contacts.
 
 ---
 
@@ -24,6 +24,7 @@ This feature enables persistent storage of contact information in the database.
 - 🔗 REST API  
 - 🐬 MySQL Database  
 - 🔌 JDBC  
+- 🧵 Java Multithreading  
 
 ---
 
@@ -50,73 +51,61 @@ AddressBookApp
 
 ---
 
-# 🗄 Database Table
+# 🧠 Multithreading Implementation
 
-Database used:
+Each contact insertion runs in a separate thread.
 
-```
-addressbook_db
-```
-
-Table:
+Example logic:
 
 ```
-contacts
+contacts.forEach(contact -> {
+    new Thread(() -> {
+        addContact(contact);
+    }).start();
+});
 ```
 
-| Column | Description |
-|------|-------------|
-| id | Contact ID |
-| first_name | First name |
-| last_name | Last name |
-| address | Address |
-| city | City |
-| state | State |
-| zip | Zip code |
-| phone | Phone number |
-| email | Email address |
-| date_added | Date when contact was added |
-
----
-
-# 🧠 SQL Query Used
-
-```
-INSERT INTO contacts
-(first_name,last_name,address,city,state,zip,phone,email,date_added)
-VALUES
-('Amit','Patel','Satellite','Ahmedabad','Gujarat','380015','9998887777','amit@email.com',CURDATE());
-```
-
-The query inserts a new contact record into the database with the current date.
+This allows multiple contacts to be inserted into the database at the same time.
 
 ---
 
 # 🌐 API Endpoint
 
-### Add Contact to Database
+### Add Multiple Contacts to Database
 
 ```
-POST /contacts/db/add
+POST /contacts/db/add-multiple
 ```
 
-This API inserts a new contact into the database.
+This endpoint accepts a list of contacts and inserts them into the database using multithreading.
 
 ---
 
 # 📥 Example Request Body
 
 ```
-{
- "firstName":"Amit",
- "lastName":"Patel",
- "address":"Satellite",
- "city":"Ahmedabad",
- "state":"Gujarat",
- "zip":"380015",
- "phoneNumber":"9998887777",
- "email":"amit@email.com"
-}
+[
+ {
+  "firstName":"Rahul",
+  "lastName":"Sharma",
+  "address":"Connaught Place",
+  "city":"Delhi",
+  "state":"Delhi",
+  "zip":"110001",
+  "phoneNumber":"8888888888",
+  "email":"rahul@email.com"
+ },
+ {
+  "firstName":"Amit",
+  "lastName":"Patel",
+  "address":"Satellite",
+  "city":"Ahmedabad",
+  "state":"Gujarat",
+  "zip":"380015",
+  "phoneNumber":"9998887777",
+  "email":"amit@email.com"
+ }
+]
 ```
 
 ---
@@ -124,7 +113,7 @@ This API inserts a new contact into the database.
 # 📤 Example Response
 
 ```
-Contact added successfully
+Multiple contacts are being added using threads
 ```
 
 ---
@@ -132,9 +121,9 @@ Contact added successfully
 # 🧪 Testing Using CURL
 
 ```
-curl -X POST http://localhost:8080/contacts/db/add \
+curl -X POST http://localhost:8080/contacts/db/add-multiple \
 -H "Content-Type: application/json" \
--d '{"firstName":"Amit","lastName":"Patel","address":"Satellite","city":"Ahmedabad","state":"Gujarat","zip":"380015","phoneNumber":"9998887777","email":"amit@email.com"}'
+-d '[{"firstName":"Rahul","lastName":"Sharma","address":"Connaught","city":"Delhi","state":"Delhi","zip":"110001","phoneNumber":"8888888888","email":"rahul@email.com"},{"firstName":"Amit","lastName":"Patel","address":"Satellite","city":"Ahmedabad","state":"Gujarat","zip":"380015","phoneNumber":"9998887777","email":"amit@email.com"}]'
 ```
 
 ---
@@ -147,20 +136,14 @@ Run the following query in MySQL:
 SELECT * FROM contacts;
 ```
 
-Example output:
-
-| id | first_name | city | date_added |
-|----|-----------|------|-----------|
-| 1 | Bhumi | Bhopal | 2026-03-09 |
-| 2 | Rahul | Delhi | 2026-03-09 |
-| 3 | Amit | Ahmedabad | 2026-03-09 |
+You should see multiple records inserted into the table.
 
 ---
 
 # 🌿 Git Branch
 
 ```
-feature/UC20-add-contact-to-database
+feature/UC21-add-multiple-contacts-multithreading
 ```
 
 After review this branch will be merged into:
@@ -173,13 +156,12 @@ dev
 
 # 📌 Next Implementation
 
-### UC21 – Add Multiple Contacts Using Multithreading
+### UC22 – Read Entries From JSON Server
 
 Next features:
 
-- Insert multiple contacts simultaneously
-- Use **Java multithreading**
-- Improve performance when adding many contacts
-- Synchronize database operations safely
+- Integrate application with **JSON Server**
+- Fetch contact entries from a mock REST API
+- Demonstrate external API communication
 
 ---
