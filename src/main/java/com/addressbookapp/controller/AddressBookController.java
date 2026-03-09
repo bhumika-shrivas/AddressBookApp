@@ -182,4 +182,13 @@ public class AddressBookController {
 
         return dbService.getContactsFromDB();
     }
+    
+    // Add Contact to Database
+    @PutMapping("/contacts/db/update")
+    public String updateContactInDB(@RequestBody Contact contact) {
+
+        AddressBookDBService dbService = new AddressBookDBService();
+
+        return dbService.updateContact(contact);
+    }
 }

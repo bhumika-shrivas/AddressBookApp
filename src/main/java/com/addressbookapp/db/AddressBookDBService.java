@@ -4,6 +4,7 @@ import com.addressbookapp.model.Contact;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -58,5 +59,42 @@ public class AddressBookDBService {
         }
 
         return contacts;
+    }
+    
+    // Update contact in database
+    public String updateContact(Contact contact) {
+
+        String query = "UPDATE contacts SET first_name=?, last_name=?, address=?, city=?, state=?, zip=?, phone=?, email=? WHERE id=?";
+
+        try {
+
+            Connection connection =
+                    DriverManager.getConnection(URL, USER, PASSWORD);
+
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            statement.setString(1, contact.getFirstName());
+            statement.setString(2, contact.getLastName());
+            statement.setString(3, contact.getAddress());
+            statement.setString(4, contact.getCity());
+            statement.setString(5, contact.getState());
+            statement.setString(6, contact.getZip());
+            statement.setString(7, contact.getPhoneNumber());
+            statement.setString(8, contact.getEmail());
+            statement.setInt(9, contact.getId());
+
+            int rowsUpdated = statement.executeUpdate();
+
+            connection.close();
+
+            if (rowsUpdated > 0) {
+                return "Contact updated successfully";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "Update failed";
     }
 }
