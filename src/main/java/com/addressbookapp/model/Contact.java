@@ -1,5 +1,7 @@
 package com.addressbookapp.model;
 
+// Simple POJO representing a contact in an address book. Contains typical
+// contact fields, getters/setters, and equality based on first+last name.
 public class Contact {
 
     private int id;
@@ -105,6 +107,7 @@ public class Contact {
     @Override
     public boolean equals(Object obj) {
 
+        // equality intentionally based on case-insensitive first+last name only
         if (this == obj)
             return true;
 
@@ -119,6 +122,7 @@ public class Contact {
 
     @Override
     public int hashCode() {
+        // compute hash based on lowercased concatenated names to match equals
         return (firstName + lastName).toLowerCase().hashCode();
     }
 }

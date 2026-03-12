@@ -3,6 +3,8 @@ package com.addressbookapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
+// Simple container representing an AddressBook identified by a name and
+// holding a list of Contact objects. Used by the service to manage multiple books.
 public class AddressBook {
 
     private String name;

@@ -12,9 +12,13 @@ import org.springframework.stereotype.Service;
 import com.addressbookapp.model.AddressBook;
 import com.addressbookapp.model.Contact;
 
+// Service layer for managing multiple AddressBooks and their Contacts.
+// Provides CRUD-like operations, search, grouping, counting, and sorting utilities.
+// This class is annotated as a Spring @Service so it can be injected where needed.
 @Service
 public class AddressBookService {
 
+    // In-memory store mapping address book name -> AddressBook instance
     private Map<String, AddressBook> addressBooks = new HashMap<>();
 
 
@@ -41,17 +45,18 @@ public class AddressBookService {
         AddressBook addressBook = addressBooks.get(addressBookName);
 
         if (addressBook == null) {
-            return "AddressBook not found";
+            return "AddressBook not found"; // caller can translate to 404 or similar
         }
 
         List<Contact> contacts = addressBook.getContacts();
 
         if (contacts.contains(contact)) {
-            return "Duplicate contact not allowed";
+            return "Duplicate contact not allowed"; // avoid duplicate entries
         }
 
         contacts.add(contact);
 
+        // maintain auxiliary maps keyed by city/state to speed up lookups
         cityMap.computeIfAbsent(contact.getCity(), k -> new ArrayList<>()).add(contact);
         stateMap.computeIfAbsent(contact.getState(), k -> new ArrayList<>()).add(contact);
 
@@ -67,12 +72,13 @@ public class AddressBookService {
             return addressBook.getContacts();
         }
 
-        return null;
+        return null; // caller should handle null (book not found)
     }
     
     // Search Contacts by City across all Address Books
     public List<Contact> searchByCity(String city) {
 
+        // stream over all address books, flatten contacts, filter by city (case-insensitive)
         return addressBooks.values().stream()
                 .flatMap(addressBook -> addressBook.getContacts().stream())
                 .filter(contact -> contact.getCity().equalsIgnoreCase(city))
@@ -91,6 +97,7 @@ public class AddressBookService {
     // View Persons by City across all Address Books
     public Map<String, List<Contact>> viewPersonsByCity() {
 
+        // group all contacts by their city property
         return addressBooks.values()
                 .stream()
                 .flatMap(addressBook -> addressBook.getContacts().stream())
